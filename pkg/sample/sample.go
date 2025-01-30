@@ -212,11 +212,27 @@ func (p *Plugin) PreFilter(
 	if err != nil {
 		return nil, framework.NewStatus(framework.Error, err.Error())
 	}
-	win := nodes[0]
+	var workerNodes []*framework.NodeInfo
+	for _, node := range nodes {
+		var isControlPlane bool
+		for _, taint := range node.Node().Spec.Taints {
+			if taint.Key == "node-role.kubernetes.io/control-plane" {
+				isControlPlane = true
+				break
+			}
+		}
+		if !isControlPlane {
+			workerNodes = append(workerNodes, node)
+		}
+	}
+	s := sets.New[string]()
+	for _, node := range workerNodes {
+		s.Insert(node.Node().Name)
+	}
 	return &framework.PreFilterResult{
 		// 过滤的节点，传递给下一轮流程
 		// 为 nil 代表所有节点都有资格
-		NodeNames: sets.New(win.Node().Name),
+		NodeNames: s,
 	}, framework.NewStatus(framework.Success, "OK")
 }
 

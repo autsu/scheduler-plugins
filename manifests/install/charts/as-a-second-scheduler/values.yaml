@@ -4,7 +4,7 @@
 
 scheduler:
   name: scheduler-plugins-scheduler
-  image: stdoutt/scheduler-plugins:381af95f
+  image: stdoutt/scheduler-plugins:bc0da6a7
   command:
     - scheduler-plugins
   replicaCount: 1
@@ -33,6 +33,8 @@ plugins:
   #enabled: ["Coscheduling","CapacityScheduling","NodeResourceTopologyMatch","NodeResourcesAllocatable"]
   enabled: ["sample"]
   disabled: ["PrioritySort"] # only in-tree plugins need to be defined here
+
+logLevel: 3
 
 # Customize the enabled plugins' config.
 # Refer to the "pluginConfig" section of manifests/<plugin>/scheduler-config.yaml.
