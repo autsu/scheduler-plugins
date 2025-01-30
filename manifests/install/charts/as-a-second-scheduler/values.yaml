@@ -4,7 +4,7 @@
 
 scheduler:
   name: scheduler-plugins-scheduler
-  image: stdoutt/scheduler-plugins:bc0da6a7
+  image: stdoutt/scheduler-plugins:4dfe401c
   command:
     - scheduler-plugins
   replicaCount: 1
@@ -34,7 +34,7 @@ plugins:
   enabled: ["sample"]
   disabled: ["PrioritySort"] # only in-tree plugins need to be defined here
 
-logLevel: 3
+logLevel: 99
 
 # Customize the enabled plugins' config.
 # Refer to the "pluginConfig" section of manifests/<plugin>/scheduler-config.yaml.

@@ -53,7 +53,7 @@ func (p *Plugin) NormalizeScore(
 	if len(scores) == 0 {
 		return framework.NewStatus(framework.Error, "no nodes found")
 	}
-	klog.V(3).Infof("NormalizeScore: pod %s, scores = %+v", pod.Name, scores)
+	klog.V(99).Infof("NormalizeScore: pod %s, scores = %+v", pod.Name, scores)
 	max := scores[0].Score
 	min := scores[0].Score
 	for _, score := range scores[1:] {
@@ -79,7 +79,7 @@ func (p *Plugin) PostBind(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod, nodeName string,
 ) {
-	klog.V(3).Infof("PostBind: pod %s to node %s", pod.Name, nodeName)
+	klog.V(99).Infof("PostBind: pod %s to node %s", pod.Name, nodeName)
 }
 
 // Bind implements framework.BindPlugin.
@@ -87,7 +87,7 @@ func (p *Plugin) Bind(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod, nodeName string,
 ) *framework.Status {
-	klog.V(3).Infof("Bind: pod %s to node %s", pod.Name, nodeName)
+	klog.V(99).Infof("Bind: pod %s to node %s", pod.Name, nodeName)
 
 	binding := &corev1.Binding{
 		ObjectMeta: metav1.ObjectMeta{
@@ -113,7 +113,7 @@ func (p *Plugin) Permit(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod, nodeName string,
 ) (*framework.Status, time.Duration) {
-	klog.V(3).Infof("Permit: pod %s to node %s, wait 10 seconds", pod.Name, nodeName)
+	klog.V(99).Infof("Permit: pod %s to node %s, wait 10 seconds", pod.Name, nodeName)
 	// 10s 后再调度到节点
 	return framework.NewStatus(framework.Success, "OK"), time.Second * 10
 }
@@ -123,7 +123,7 @@ func (p *Plugin) Reserve(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod, nodeName string,
 ) *framework.Status {
-	klog.V(3).Infof("Reserve: pod %s to node %s", pod.Name, nodeName)
+	klog.V(99).Infof("Reserve: pod %s to node %s", pod.Name, nodeName)
 	return framework.NewStatus(framework.Success, "OK")
 }
 
@@ -132,7 +132,7 @@ func (p *Plugin) Unreserve(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod, nodeName string,
 ) {
-	klog.V(3).Infof("Unreserve: pod %s from node %s", pod.Name, nodeName)
+	klog.V(99).Infof("Unreserve: pod %s from node %s", pod.Name, nodeName)
 }
 
 // Score implements framework.ScorePlugin.
@@ -142,7 +142,7 @@ func (p *Plugin) Score(
 	pod *corev1.Pod, nodeName string,
 ) (int64, *framework.Status) {
 	score := rand.Int64N(100)
-	klog.V(3).Infof("Score: pod %s to node %s, node score = %d", pod.Name, nodeName, score)
+	klog.V(99).Infof("Score: pod %s to node %s, node score = %d", pod.Name, nodeName, score)
 	return score, framework.NewStatus(framework.Success, "OK")
 }
 
@@ -159,9 +159,9 @@ func (p *Plugin) PreScore(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod, nodes []*framework.NodeInfo,
 ) *framework.Status {
-	klog.V(3).Infof("PreScore: pod %s", pod.Name)
+	klog.V(99).Infof("PreScore: pod %s", pod.Name)
 	for _, node := range nodes {
-		klog.V(3).Infof("PreScore: node %s", node.Node().Name)
+		klog.V(99).Infof("PreScore: node %s", node.Node().Name)
 	}
 	return framework.NewStatus(framework.Success, "OK")
 }
@@ -176,8 +176,8 @@ func (p *Plugin) PostFilter(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod, filteredNodeStatusMap framework.NodeToStatusMap,
 ) (*framework.PostFilterResult, *framework.Status) {
-	klog.V(3).Infof("PostFilter: pod %s", pod.Name)
-	klog.V(3).Infof("PostFilter: filteredNodeStatusMap = %+v", filteredNodeStatusMap)
+	klog.V(99).Infof("PostFilter: pod %s", pod.Name)
+	klog.V(99).Infof("PostFilter: filteredNodeStatusMap = %+v", filteredNodeStatusMap)
 	return &framework.PostFilterResult{}, framework.NewStatus(framework.Success, "OK")
 }
 
@@ -186,7 +186,7 @@ func (p *Plugin) Filter(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod, nodeInfo *framework.NodeInfo,
 ) *framework.Status {
-	klog.V(3).Infof("Filter: pod %s, node %s", pod.Name, nodeInfo.Node().Name)
+	klog.V(99).Infof("Filter: pod %s, node %s", pod.Name, nodeInfo.Node().Name)
 	if _, ok := nodeInfo.Node().Annotations[annotationKey]; !ok {
 		return framework.NewStatus(framework.Unschedulable, "missing annotation "+annotationKey)
 	}
@@ -198,7 +198,7 @@ func (*Plugin) PreBind(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod, nodeName string,
 ) *framework.Status {
-	klog.V(3).Infof("PreBind: pod %s to node %s", pod.Name, nodeName)
+	klog.V(99).Infof("PreBind: pod %s to node %s", pod.Name, nodeName)
 	return framework.NewStatus(framework.Success, "OK")
 }
 
@@ -207,7 +207,7 @@ func (p *Plugin) PreFilter(
 	ctx context.Context, state *framework.CycleState,
 	pod *corev1.Pod,
 ) (*framework.PreFilterResult, *framework.Status) {
-	klog.V(3).Infof("PreFilter: pod %s", pod.Name)
+	klog.V(99).Infof("PreFilter: pod %s", pod.Name)
 	nodes, err := p.handle.SnapshotSharedLister().NodeInfos().List()
 	if err != nil {
 		return nil, framework.NewStatus(framework.Error, err.Error())
@@ -238,7 +238,7 @@ func (p *Plugin) PreFilter(
 
 // PreFilterExtensions implements framework.PreFilterPlugin.
 func (p *Plugin) PreFilterExtensions() framework.PreFilterExtensions {
-	klog.V(3).Infof("PreFilterExtensions")
+	klog.V(99).Infof("PreFilterExtensions")
 	return nil
 }
 
