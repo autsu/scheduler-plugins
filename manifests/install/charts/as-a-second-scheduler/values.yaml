@@ -4,7 +4,7 @@
 
 scheduler:
   name: scheduler-plugins-scheduler
-  image: stdoutt/scheduler-plugins:b9e34205
+  image: stdoutt/scheduler-plugins:d5bb88fb
   command:
     - scheduler-plugins
   replicaCount: 1

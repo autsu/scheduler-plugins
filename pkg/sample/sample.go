@@ -26,7 +26,7 @@ var logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 }))
 
 const (
-	Name = "sample"
+	Name = "Sample"
 )
 
 type Args struct {

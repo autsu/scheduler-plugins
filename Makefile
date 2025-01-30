@@ -23,3 +23,6 @@ all:
 	@$(MAKE) build
 	@$(MAKE) build-image
 	@$(MAKE) push-image
+
+deploy:
+	helm upgrade --install i-scheduler manifests/install/charts/as-a-second-scheduler --namespace kube-system -f manifests/install/charts/as-a-second-scheduler/values.yaml
