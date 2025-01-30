@@ -19,6 +19,7 @@ var (
 	_ framework.PreBindPlugin    = &Plugin{}
 	_ framework.FilterPlugin     = &Plugin{}
 	_ framework.PostFilterPlugin = &Plugin{}
+	_ framework.QueueSortPlugin  = &Plugin{}
 )
 
 var logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
@@ -39,6 +40,11 @@ type Plugin struct {
 	*kubernetes.Clientset
 	handle framework.Handle
 	args   *Args
+}
+
+// Less implements framework.QueueSortPlugin.
+func (p *Plugin) Less(x *framework.QueuedPodInfo, y *framework.QueuedPodInfo) bool {
+	return x.Timestamp.Before(y.Timestamp)
 }
 
 // PostFilter implements framework.PostFilterPlugin.
